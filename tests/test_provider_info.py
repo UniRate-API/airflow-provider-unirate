@@ -32,8 +32,14 @@ def test_provider_info_required_keys_present():
 def test_entry_point_resolves_to_get_provider_info():
     """Once the package is installed, the entry point must resolve."""
     eps = importlib.metadata.entry_points()
+    # 3.10+ returns an EntryPoints object with .select(); 3.9 returns a dict.
+    group = (
+        list(eps.select(group="apache_airflow_provider"))
+        if hasattr(eps, "select")
+        else list(eps.get("apache_airflow_provider", []))
+    )
     matches = [
-        ep for ep in eps.select(group="apache_airflow_provider")
+        ep for ep in group
         if ep.name == "provider_info" and "unirate_provider" in ep.value
     ]
     assert matches, "apache_airflow_provider entry point not registered"
