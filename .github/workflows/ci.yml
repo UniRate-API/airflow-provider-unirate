@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        airflow-version: ["2.10.5", "2.11.0"]
+        include:
+          - python-version: "3.12"
+            airflow-version: "3.0.6"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Apache Airflow ${{ matrix.airflow-version }}
+        run: |
+          python -m pip install --upgrade pip
+          PY="${{ matrix.python-version }}"
+          AF="${{ matrix.airflow-version }}"
+          CONSTRAINT="https://raw.githubusercontent.com/apache/airflow/constraints-${AF}/constraints-${PY}.txt"
+          pip install "apache-airflow==${AF}" --constraint "${CONSTRAINT}"
+
+      - name: Install provider + test deps
+        run: pip install -e ".[test]"
+
+      - name: Run tests
+        run: pytest -v
+
+      - name: Verify provider is discoverable
+        env:
+          AIRFLOW_HOME: /tmp/airflow-ci
+        run: |
+          airflow db migrate
+          airflow providers list | grep airflow-provider-unirate
+          airflow providers hooks | grep unirate

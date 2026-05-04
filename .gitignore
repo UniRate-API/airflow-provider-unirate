@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+.eggs/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtualenvs
+.venv/
+venv/
+
+# Tooling
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Airflow scratch
+airflow.db
+airflow.cfg
+airflow-webserver.pid
+logs/

@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "airflow-provider-unirate"
+dynamic = ["version"]
+description = "Apache Airflow provider for UniRateAPI: hooks, operators, and sensors for real-time and historical currency exchange rates."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [{ name = "UniRate", email = "admin@unirateapi.com" }]
+keywords = ["airflow", "apache-airflow", "provider", "currency", "exchange-rate", "fx", "unirate"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Plugins",
+    "Framework :: Apache Airflow",
+    "Framework :: Apache Airflow :: Provider",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: System :: Monitoring",
+]
+dependencies = [
+    "apache-airflow>=2.10",
+    "unirate-api>=1.0.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7",
+    "pytest-cov>=4",
+]
+
+[project.urls]
+Homepage = "https://github.com/UniRate-API/airflow-provider-unirate"
+Documentation = "https://github.com/UniRate-API/airflow-provider-unirate#readme"
+Source = "https://github.com/UniRate-API/airflow-provider-unirate"
+Issues = "https://github.com/UniRate-API/airflow-provider-unirate/issues"
+"UniRate API" = "https://unirateapi.com"
+
+[project.entry-points.apache_airflow_provider]
+provider_info = "unirate_provider.__init__:get_provider_info"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["unirate_provider*"]
+exclude = ["tests*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "unirate_provider.__version__" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"
